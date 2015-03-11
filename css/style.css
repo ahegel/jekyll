@@ -823,3 +823,30 @@ table tfoot {
   h2, h3 { page-break-after: avoid; }
   
 }
+
+  /* =============================================================================
+     Testing New Lessons Page
+     ========================================================================== */
+
+ul.lesson-image li {
+	width: 300px;
+	display: inline-block;
+	vertical-align: top;
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+p.lesson-image-title {
+	font-size: 2em;
+	font-weight: bold;
+	text-decoration: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+p.lesson-image-author {
+	text-decoration: none;
+	margin: 0px;
+	padding: 0px;
+}
