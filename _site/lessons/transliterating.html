@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+
+	  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <!-- Mobile viewport optimized: h5bp.com/viewport -->
+    <meta name="viewport" content="width=device-width">
+    
+    <!--Font awesome CDN -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,700|Crete+Round' rel='stylesheet' type='text/css'>
+    <link href="http://programminghistorian.org/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://programminghistorian.org/css/github.css">
+
+    <title>Transliterating non-ASCII characters with Python</title>
+        
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://programminghistorian.org/js/ui.js"></script>
+    <script type="text/javascript" src="http://programminghistorian.org/js/ext_links.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('.slide-trigger').collapsable();
+      });
+    </script>
+
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2752866-8']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+  </head>
+
+
+
+
+  <body>
+
+    <header role="banner">
+    <h1><a href="http://programminghistorian.org">The Programming Historian</a></h1>
+
+	        <div class="additional">
+          <ul id="menu-main-menu" class="additional">
+            <li class="menu-item"><a href="http://programminghistorian.org/about">About</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/lessons">Lessons</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/contribute">Contribute</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/project-team">Project Team</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/news.html">News</a></li>
+          </ul>
+        </div>
+
+	</header>
+
+	<div role="main">
+		<article>
+			<header>
+			    <p class="kicker">October 4, 2013</p>
+				<h1><a href="http://programminghistorian.org/lessons/transliterating.html">Transliterating non-ASCII characters with Python</a></h1>
+				<p class="byline">By
+				
+				
+				      Seth Bernstein
+                
+				</p>
+				
+				
+				
+				<ul class="credits">Reviewed by
+				
+                      
+                           
+                                 Adam Crymble
+                           
+                      
+                           
+						         , Michelle Moravec
+                           
+                      
+                           
+						         , Ezra Brooks
+                           
+                      
+                           
+                                 and Russell Alleen-Willems
+                           
+                      
+                
+                </ul>
+                
+				
+			</header>
+
+			<div class="content">
+	              <p><strong>Lesson Goals:</strong></p>
+
+<p>This lesson shows how to use Python to transliterate automatically a
+list of words from a language with a non-Latin alphabet to a
+standardized format using the American Standard Code for Information
+Interchange (<a href="http://en.wikipedia.org/wiki/Ascii">ASCII</a>) characters. It builds on readers’ understanding
+of Python from the lessons “<a href="../lessons/viewing-html-files">Viewing HTML Files</a>,” “<a href="../lessons/working-with-web-pages">Working with Web
+Pages</a>,” “<a href="../lessons/from-html-to-list-of-words-1">From HTML to List of Words (part 1)</a>” and “<a href="../lessons/intro-to-beautiful-soup">Intro to
+Beautiful Soup</a>.” At the end of the lesson, we will use the
+transliteration dictionary to convert the names from a database of the
+Russian organization <a href="http://lists.memo.ru">Memorial</a> from <a href="http://en.wikipedia.org/wiki/Cyrillic_script">Cyrillic</a> into <a href="http://en.wikipedia.org/wiki/Latin_script">Latin
+characters</a>. Although the example uses Cyrillic characters, the
+technique can be reproduced with other alphabets using <a href="http://en.wikipedia.org/wiki/Unicode">Unicode</a>.</p>
+
+<p><strong>What Is Transliteration and for Whom Is It Useful?</strong></p>
+
+<p>Transliteration is something that most people do every day, knowingly or
+not. Many English speakers would have trouble recognizing the name
+Владимир Путин but know that Vladimir Putin is Russia’s current
+president. Transliteration is especially useful with names, because a
+standardized transliterated name is often the same as a translated name.
+(Exceptions are when someone’s name is translated in a non-uniform way.
+Leon Trotsky’s Russian name would be transliterated in a standardized
+form as Lev Trotskii.)</p>
+
+<p>But transliteration has other uses too, especially for scholars. In many
+fields, the publishing convention is to transliterate any evidence used
+in the original. Moreover, citations from scholarly works need to be
+transliterated carefully so that readers can find and verify evidence
+used in texts. Finally, transliteration can be more practical for
+authors who can type more fluently with Latin letters than in the native
+alphabet of a language that does not use Latin characters.</p>
+
+<p>Programming languages like Python also benefit from transliteration.
+Python handles Cyrillic relatively well in certain environments, like
+<a href="http://en.wikipedia.org/wiki/Terminal_%28OS_X%29">Terminal</a> for MacOS or Linux, or in Windows, <a href="http://en.wikipedia.org/wiki/IDLE_%28Python%29">IDLE</a>, the official
+Python integrated development environment. However, even in these Python
+converts non-ASCII characters into code. Other environments, like the
+Python shell for Windows (command line) or <a href="http://www.activestate.com/komodo-edit">Komodo Edit</a>, know Unicode
+but will not print the Cyrillic characters that Unicode represents
+without tricky additional configuration. In environments that do support
+Cyrillic, switching between a Latin character set to write code and a
+non-Latin character set to handle inputs can be tedious. Thus, creating
+a program to transliterate evidence automatically eliminates the step of
+transliteration for researchers and it converts the text into a format
+that Python can handle more readily. <strong>This lesson was built and tested
+using IDLE for Windows and Terminal for MacOS. The author strongly
+recommends that you follow along using the program tested on your
+operating system rather Windows Command Prompt or Komodo Edit.</strong></p>
+
+<p>This lesson will be particularly useful for research in fields that use
+a standardized transliteration format, such as Russian history field,
+where the convention is to use a simplified version of the American
+Library Association-Library of Congress (<a href="http://en.wikipedia.org/wiki/ALA-LC_romanization_for_Russian">ALA-LC</a>) transliteration
+table. (All tables currently available can be accessed here.)
+Researchers dealing with large databases of names can benefit
+considerably. However, this lesson will also allow practice with
+Unicode, character translation and using the parser <a href="http://www.crummy.com/software/BeautifulSoup/">Beautiful Soup in
+Python.</a></p>
+
+<p><strong>Converting a Webpage to Unicode</strong></p>
+
+<p>The goal of this lesson is to take a list of names from a Russian
+database and convert them from Cyrillic into ASCII characters. The page
+we will use is from the site of the Russian human rights organization
+Memorial. During <a href="http://en.wikipedia.org/wiki/Glasnost">Glasnost</a> professional and amateur historians in the
+Soviet Union gained the ability to conduct research on previously taboo
+subjects, such as repression under Stalin. Banding together, they
+founded <a href="http://lists.memo.ru">Memorial</a> to collect and publicize their findings. Today, the
+NGO conducts research on a range of civil rights abuses in Russia, but
+collecting data about the victims of Stalinism remains one of its main
+functions. On the Memorial website researchers can find a database with
+some three million entries of people who were arrested or executed by
+Stalin’s regime. It is an important resource on a dark topic. However,
+because the database has many, many names, it lends itself nicely to
+automated transliteration. This lesson will use just the first page of
+the database, found <a href="http://lists.memo.ru/d1/f1.htm">here</a>, but using the lesson on “<a href="../lessons/automated-downloading-with-wget">Automated
+Downloading with Wget</a>,” it would be possible to go through the entire
+database as fast as your computer would allow.</p>
+
+<p>We need to start by modifying the process found in the lesson “<a href="../lessons/working-with-web-pages">Working
+with Web Pages</a>.” There we learned how to open and copy the HTML from
+a web page in Python. But what if we want to open a page in a language
+that does not use Latin characters? Python can do this but we need to
+tell it how to read these letters using a codec, a library of codes that
+allows Python to represent non-ASCII characters. Working with web pages
+makes this easy because almost all web pages specify what kind of
+encoding they use, in the page’s <em>headers</em>. In Python, opening a web page
+does not just give you the HTML, but it creates an object with several
+useful characteristics. One is that we can access the headers by calling
+the <code>header()</code> method. This method returns something a lot like a Python
+dictionary with information that is important to web programmers. For
+our purposes, what is important is that the encoding is stored under the
+‘content-type’ key.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#transliterator.py</span>
+<span class="kn">import</span> <span class="nn">urllib2</span>
+
+<span class="n">page</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="s">&#39;http://lists.memo.ru/d1/f1.htm&#39;</span><span class="p">)</span>
+
+<span class="c">#what is the encoding?</span>
+<span class="k">print</span> <span class="n">page</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;content-type&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p>Under the ‘content-type’ key we find this information:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">;</span> <span class="n">charset</span><span class="o">=</span><span class="n">windows</span><span class="o">-</span><span class="mi">1251</span>
+</code></pre></div>
+<p>The ‘content-type’ is telling us that the file stored at the url we
+accessed is in HTML and that its encoding (after ‘charset=’, meaning
+character set) is ‘windows-1251′, a common encoding for Cyrillic
+characters. You can visit the webpage and view the Page Source and see
+for yourself that the first line does in fact contain a ‘content-type’
+variable with the value text/html; charset=windows-1251. It would not be
+so hard to work with the ‘windows-1251′ encoding. However,
+‘windows-1251′ is specifically for Cyrillic and will not handle all
+languages. For the sake of learning a standard method, what we want is
+Unicode, a coding set that handles not just Cyrillic but characters and
+symbols from virtually any language. (For more on Unicode, see the <a href="http://www.unicode.org/standard/WhatIsUnicode.html">What
+is Unicode</a> page.) Converting into Unicode gives us the potential to
+create a transliteration table that could cover multiple languages and
+special characters in a way that region-specific character sets do not
+allow.</p>
+
+<p>How do you convert the characters to Unicode? First, Python needs to
+know the original encoding of the source, ‘windows-1251.’ We could just
+assign ‘windows-1251′ to a variable by typing it manually but the
+encoding may not always be ‘windows-1251.’ There are other character
+sets for Cyrillic, not to mention other languages. Let’s find a way to
+make the process more automatic for those cases. It helps that the
+encoding is the very last part of the string, so we can isolate it from
+everything that came before in the string. By using the <code>.split()</code> method,
+the string containing whatever encoding it is can be assigned to a
+variable. The <code>.split(separator)</code> method in Python returns a list of
+sections in the string that are split by some user-defined separator.
+Assigning no separator to <code>.split()</code> separates a string at the spaces.
+Another use of the <code>.split()</code> method is to separate by commas, which can
+help to work with <a href="http://en.wikipedia.org/wiki/Comma-separated_values">comma separated value</a> (csv) files. In this case,
+though, by splitting the ‘content-type’ string at ‘charset=’, we get a
+<em>list</em> with two strings where the second will be the character set.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">encoding</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;content-type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;charset=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div>
+<p>The encoding is assigned to the variable called ‘<em>encoding</em>’. You can
+check to see if this worked by printing the ‘<em>encoding</em>’ variable. Now we
+can tell Python how to read the page as Unicode. Using the
+<code>unicode(object [, encoding])</code> method turns a string of characters into a
+Unicode object. A Unicode object is similar to a string but it can
+contain special characters. If they are in a non-ASCII character set,
+like here with ‘windows-1251’, we have to use the optional encoding
+parameter.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#read the HTML as a string into a variable</span>
+<span class="n">content</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c"># the unicode method tries to use ASCII so we need to tell it the encoding</span>
+<span class="n">content</span> <span class="o">=</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)</span>
+<span class="n">content</span><span class="p">[</span><span class="mi">200</span><span class="p">:</span><span class="mi">300</span><span class="p">]</span>
+</code></pre></div>
+<p> </p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="s">u&#39;&quot;list-right&quot;&gt;</span><span class="se">\r\n</span>
+<span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;name&quot;</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;n1&quot;</span><span class="o">&gt;&lt;/</span><span class="n">a</span><span class="o">&gt;</span>\<span class="n">u0410</span><span class="o">-</span>\<span class="n">u0410</span>\<span class="n">u043a</span>\<span class="n">u0443</span> \<span class="n">u0422</span>\<span class="n">u0443</span>\<span class="n">u043b</span>\<span class="n">u0438</span>\<span class="n">u043a</span>\<span class="n">u043e</span>\<span class="n">u0432</span>\<span class="n">u0438</span>\<span class="n">u0447</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;cont&quot;</span><span class="o">&gt;</span>\<span class="n">r</span>\<span class="n">n</span>\<span class="n">u0420</span>\<span class="n">u043e</span>\<span class="n">u0434</span>\<span class="n">u0438</span>\<span class="n">u043b</span>\<span class="n">u0441</span>\<span class="n">u044f</span>\<span class="n">xa0</span>\<span class="n">u0432</span> <span class="s">&#39;&lt;/p&gt;</span>
+</code></pre></div>
+<p>In some editors like Komodo, printing even Unicode will raise an error.
+Indeed, the inability of some Python environments to print Unicode out
+of the box is one big advantage of transliterating it into ASCII. In
+IDLE, though, we can print this content to see it in Cyrillic rather
+than Unicode:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c"># see what happens when Python prints Unicode</span>
+<span class="k">print</span> <span class="n">content</span><span class="p">[</span><span class="mi">200</span><span class="p">:</span><span class="mi">300</span><span class="p">]</span>
+</code></pre></div>
+<p> </p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="s">&quot;list-right&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;name&quot;</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;n1&quot;</span><span class="o">&gt;&lt;/</span><span class="n">a</span><span class="o">&gt;</span><span class="err">А</span><span class="o">-</span><span class="err">Аку</span> <span class="err">Туликович</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="err">Родился</span> <span class="err">в</span>
+</code></pre></div>
+<p>Excellent - the web page is now converted to Unicode. All the
+‘\u0420’-type marks are Unicode and Python knows that they code to
+Cyrillic characters. The forward slash is called an ‘<em>escape character</em>’
+and allows Python to do things like use special characters in Unicode or
+signify a line break (‘<code>\n</code>’) in a document. Each counts as just one
+character. Now we can create a Python <em>dictionary</em> that will act as the
+transliteration table.</p>
+
+<p><strong>Unicode Transliteration Dictionary</strong></p>
+
+<p>A dictionary is an unordered collection of <em>key-object pairs</em>. What this
+means is that under each key, the dictionary stores some number or
+string or other object – even another dictionary. (See also the lesson
+“<a href="../lessons/counting-frequencies">Counting Frequencies</a>.”) A dictionary has the following syntax:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">my_dictionary</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;Vladimir&#39;</span><span class="p">:</span> <span class="s">&#39;Putin&#39;</span><span class="p">,</span> <span class="s">&#39;Boris&#39;</span><span class="p">:</span> <span class="s">&#39;Yeltsin&#39;</span><span class="p">}</span>
+<span class="k">print</span> <span class="n">my_dictionary</span><span class="p">[</span><span class="s">&#39;Vladimir&#39;</span><span class="p">]</span>
+
+<span class="o">&gt;</span> <span class="n">Putin</span>
+</code></pre></div>
+<p>How can we turn this into a transliteration table? Just make each
+Unicode character a key in the dictionary. Its value will be whatever
+character(s) it transliterates to. The table for Romanization of Russian
+is available from the <a href="http://www.lcweb.loc.gov/catdir/cpso/romanization/russian.pdf">Library of Congress</a>. This table needs to be
+simplified slightly. The ALA-LC suggests using characters with umlauts
+or ligatures to represent Cyrillic letters but those characters are no
+more ASCII than Cyrillic characters. So instead no umlauts or ligatures
+will be used.</p>
+
+<p>Each Cyrillic letter has a different Unicode value. It would take time
+to find each one of them but fortunately <a href="http://en.wikipedia.org/wiki/Cyrillic_script_in_Unicode">Wikipedia has a table</a>. If
+the script were very rare, we could find it at the <a href="http://www.unicode.org/charts/">Unicode website</a>.</p>
+
+<p>We just need to combine the transliteration table with the Unicode
+table. The Unicode value for the Russian letter “Ж” is 0416 and it
+transliterates to the Latin characters “Zh.” Python needs more than just
+the Unicode identifier. It also needs to know to look out for a Unicode
+character. Therefore all the Unicode characters used in the dictionary
+should be in the format u’\uXXXX’. In this case, the letter Ж is
+u’\u0416’. We can create a transliteration dictionary and assign ‘Zh’
+as the value for the key u’\u0416’ in it.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">cyrillic_translit</span> <span class="o">=</span> <span class="p">{</span> <span class="s">u&#39;</span><span class="se">\u0416</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;Zh&#39;</span><span class="p">}</span>
+</code></pre></div>
+<p>As it turns out, lowercase Cyrillic letters in Unicode have the same
+value as their uppercase counterparts except the value of the second
+number is two greater. Thus, ‘ж’ codes to 0436. Now that we have a
+transliteration dictionary created, we just add a dictionary key-value
+pair.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">cyrillic_translit</span><span class="p">[</span><span class="s">u&#39;</span><span class="se">\u0436</span><span class="s">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;zh&#39;</span>
+</code></pre></div>
+<p>Of course, rather than do each pair one by one, it would probably be
+easier to write the dictionary in a Python module or paste it in from a
+word processor. The full Cyrillic transliteration dictionary is here:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">cyrillic_translit</span><span class="o">=</span><span class="p">{</span><span class="s">u&#39;</span><span class="se">\u0410</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0430</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;a&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0411</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0431</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;b&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0412</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;V&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0432</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;v&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0413</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;G&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0433</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;g&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0414</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0434</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;d&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0415</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;E&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0435</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;e&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0416</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;Zh&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0436</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;zh&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0417</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;Z&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0437</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;z&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0418</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;I&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0438</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;i&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0419</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;I&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0439</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;i&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u041a</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;K&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u043a</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;k&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u041b</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;L&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u043b</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;l&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u041c</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;M&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u043c</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;m&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u041d</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;N&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u043d</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;n&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u041e</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;O&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u043e</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;o&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u041f</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;P&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u043f</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;p&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0420</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0440</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;r&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0421</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;S&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0441</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;s&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0422</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;T&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0442</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;t&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0423</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;U&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0443</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;u&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0424</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;F&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0444</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;f&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0425</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;Kh&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0445</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;kh&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0426</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;Ts&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0446</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;ts&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0427</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;Ch&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0447</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;ch&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0428</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;Sh&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0448</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;sh&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u0429</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;Shch&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u0449</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;shch&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u042a</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u044a</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;&quot;&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u042b</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;Y&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u044b</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;y&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u042c</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u044c</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&quot;&#39;&quot;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u042d</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;E&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u044d</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;e&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u042e</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;Iu&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u044e</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;iu&#39;</span><span class="p">,</span>
+<span class="s">u&#39;</span><span class="se">\u042f</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;Ia&#39;</span><span class="p">,</span> <span class="s">u&#39;</span><span class="se">\u044f</span><span class="s">&#39;</span><span class="p">:</span> <span class="s">&#39;ia&#39;</span><span class="p">}</span>
+</code></pre></div>
+<p>Now that we have the transliteration dictionary, we can simply loop
+through every character in the source page and convert those Unicode
+characters in the dictionary. If we turn it into a procedure, then we
+can reuse it for other webpages.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">transliterate</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">translit_table</span><span class="p">):</span>
+    <span class="n">converted_word</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
+        <span class="n">transchar</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">translit_table</span><span class="p">:</span>
+            <span class="n">transchar</span> <span class="o">=</span> <span class="n">translit_table</span><span class="p">[</span><span class="n">char</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">transchar</span> <span class="o">=</span> <span class="n">char</span>
+        <span class="n">converted_word</span> <span class="o">+=</span> <span class="n">transchar</span>
+    <span class="k">return</span> <span class="n">converted_word</span>
+</code></pre></div>
+<p>We can then call this function using the newly created dictionary and
+the webpage downloaded earlier.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#we will run it with the cyrillic_translit dictionary and the webpage</span>
+<span class="n">converted_content</span> <span class="o">=</span> <span class="n">transliterate</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">cyrillic_translit</span><span class="p">)</span>
+<span class="n">converted_content</span><span class="p">[</span><span class="mi">200</span><span class="p">:</span><span class="mi">310</span><span class="p">]</span>
+</code></pre></div>
+<p>Here is what we end up with:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="s">u&#39;=&quot;list-right&quot;&gt;</span><span class="se">\r\n</span><span class="s">&lt;/li&gt;</span>
+    <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;name&quot;</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;n1&quot;</span><span class="o">&gt;&lt;/</span><span class="n">a</span><span class="o">&gt;</span><span class="n">A</span><span class="o">-</span><span class="n">Aku</span> <span class="n">Tulikovich</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;cont&quot;</span><span class="o">&gt;</span>\<span class="n">r</span>\<span class="n">nRodilsia</span>\<span class="n">xa0v</span> <span class="mi">1913</span> <span class="n">g</span><span class="o">.</span><span class="s">&#39;&lt;/p&gt;</span>
+</code></pre></div>
+<p>Still not perfect. Python did not convert the special character ‘\xa0′
+that signifies a <em>non-breaking space</em>. But with the transliteration
+dictionary, any characters that pop up can just be added to the
+dictionary and they will be converted. First we need to find out what
+that character is. We could search for it on the Internet or we can just
+print it:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#let&#39;s find out what u&#39;\xa0&#39; is</span>
+<span class="k">print</span> <span class="s">u&#39;</span><span class="se">\xa0</span><span class="s">&#39;</span>
+
+<span class="c">#it&#39;s not nothing but a non-breaking space</span>
+<span class="c">#it would be better if our transliteration dictionary could change it into a space</span>
+
+<span class="n">cyrillic_translit</span><span class="p">[</span><span class="s">u&#39;</span><span class="se">\xa0</span><span class="s">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39; &#39;</span>
+</code></pre></div>
+<p>With this fix, all the Cyrillic and special characters are gone, making
+it much easier to read the file and deal with it. For the last part of
+the lesson, we will modify methods used in the lesson “<a href="../lessons/intro-to-beautiful-soup">Intro to
+Beautiful Soup</a>” to get a list of transliterated names from the
+webpage.</p>
+
+<p><strong>Transliterated List of Names</strong></p>
+
+<p>There may be cases where it is best to transliterate the entire file but
+if the goal is to transliterate and extract just a part of the data in
+the file, it would be best to extract first and transliterate later.
+That way Python will only transliterate a small part of the file rather
+than having to loop through the whole of the HTML. Speed is not a huge
+issue when dealing with a handful of web pages but Memorial’s site has
+thousands of pages. The difference between looping through thousands of
+whole pages and just looping through a small part of each of those pages
+can add up. But, of course, it would have been anti-climactic to have
+all the names before the transliteration dictionary and also more
+difficult for non-Cyrillic readers to understand the rest of the lesson.
+So now we need to find a way to get just the names from the page. Here
+is the first bit of HTML from the converted_content string, containing
+parts of two database entries:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">converted_content</span><span class="p">[</span><span class="mi">200</span><span class="p">:</span><span class="mi">1000</span><span class="p">]</span>
+</code></pre></div>
+<p>This code prints out characters 200 to 1000 of the HTML, which happens
+to include the entire first entry and the beginning of the second:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="s">u&#39;=&quot;list-right&quot;&gt;</span><span class="se">\r\n</span><span class="s">&lt;/li&gt;</span>
+    <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;name&quot;</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;n1&quot;</span><span class="o">&gt;&lt;/</span><span class="n">a</span><span class="o">&gt;</span><span class="n">A</span><span class="o">-</span><span class="n">Aku</span> <span class="n">Tulikovich</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">p</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="n">class</span><span class="o">=</span><span class="s">&quot;cont&quot;</span><span class="o">&gt;</span>\<span class="n">r</span>\<span class="n">nRodilsia</span> <span class="n">v</span> <span class="mi">1913</span> <span class="n">g</span><span class="o">.</span><span class="p">,</span> <span class="n">Kamchatskaia</span> <span class="n">gub</span><span class="o">.</span><span class="p">,</span> <span class="n">Tigil</span>\<span class="s">&#39;skii r-n, stoibishsha Utkholok; koriak-kochevnik; malogramotnyi; b/p; </span><span class="se">\r\n\r\n</span>
+<span class="n">Arestovan12</span> <span class="n">noiabria</span> <span class="mi">1938</span> <span class="n">g</span><span class="o">.</span>\<span class="n">r</span>\<span class="n">n</span>
+<span class="n">Prigovoren</span><span class="p">:</span> <span class="n">Koriakskii</span> <span class="n">okrsud</span> <span class="mi">8</span> <span class="n">aprelia</span> <span class="mi">1939</span> <span class="n">g</span><span class="o">.</span><span class="p">,</span> <span class="n">ob</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
+<span class="err"> </span>
+
+<span class="n">v</span><span class="o">.</span><span class="p">:</span> <span class="n">po</span> <span class="n">st</span><span class="o">.</span> <span class="mi">58</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">8</span><span class="o">-</span><span class="mi">9</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">11</span> <span class="n">UK</span> <span class="n">RSFSR</span><span class="o">.</span>\<span class="n">r</span>\<span class="n">n</span>
+<span class="n">Prigovor</span><span class="p">:</span> <span class="mi">20</span> <span class="n">let</span><span class="o">.</span> <span class="n">Opredeleniem</span> <span class="n">Voen</span>
+
+<span class="n">noi</span> <span class="n">kollegii</span> <span class="n">VS</span> <span class="n">SSSR</span> <span class="n">ot</span> <span class="mi">17</span> <span class="n">oktiabria</span> <span class="mi">1939</span> <span class="n">g</span><span class="o">.</span> <span class="n">mera</span> <span class="n">snizhena</span> <span class="n">do</span> <span class="mi">10</span> <span class="n">let</span><span class="o">.</span>\<span class="n">r</span>\<span class="n">nReabili</span>
+
+<span class="n">tirovan</span> <span class="mi">15</span> <span class="n">marta</span> <span class="mi">1958</span> <span class="n">g</span><span class="o">.</span> <span class="n">Reabilitirovan</span> <span class="n">opredeleniem</span> <span class="n">Voennoi</span> <span class="n">kollegii</span> <span class="n">VS</span> <span class="n">SSSR</span>\<span class="n">r</span>\
+
+<span class="n">n</span>
+<span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;author&quot;</span><span class="o">&gt;</span><span class="n">Istochnik</span><span class="p">:</span> <span class="n">Baza</span> <span class="n">dannykh</span> <span class="n">o</span> <span class="n">zhertvakh</span> <span class="n">repressii</span> <span class="n">Kamchatskoi</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="n">obl</span><span class="o">.</span>
+<span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span>\<span class="n">r</span>\<span class="n">n</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;name&quot;</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;n2&quot;</span><span class="o">&gt;&lt;/</span><span class="n">a</span><span class="o">&gt;</span><span class="n">Aab</span> <span class="n">Avgust</span> <span class="n">Mikhailovich</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="n">p</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;cont&quot;</span><span class="o">&gt;</span>\<span class="n">r</span>\<span class="n">nRodilsia</span> <span class="n">v</span> <span class="mi">1899</span> <span class="n">g</span><span class="o">.</span><span class="p">,</span> <span class="n">Saratovskaia</span> <span class="n">obl</span><span class="o">.</span><span class="p">,</span> <span class="n">Grimm</span> <span class="n">s</span><span class="o">.</span><span class="p">;</span> <span class="n">nemets</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="n">obrazovanie</span> <span class="n">nachal</span>\<span class="s">&#39;noe;&#39;</span>
+</code></pre></div>
+<p>Each entry includes lots of information: name (last, first and
+patronymic), date of birth, place of birth, profession, date of arrest,
+date of sentencing and so on. If we wanted the detailed information
+about each person, we would have to parse the page ourselves and extract
+that information using the string manipulation techniques from the
+lesson “<a href="../lessons/manipulating-strings-in-python">Manipulating Strings in Python</a>.” However, for just the names
+it will be quicker to use the HTML parsing module Beautiful Soup. If you
+have not installed Beautiful Soup, see “<a href="../lessons/installing-python-modules-pip">Installing Python Modules with pip</a>”
+and read “<a href="../lessons/intro-to-beautiful-soup">Intro to Beautiful Soup</a>” for an overview of how
+this tool works. In the transliterator module, we will load Beautiful
+Soup and then turn our converted page into a <em>Beautiful Soup object</em>.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#load Beautiful Soup</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="c">#convert the page</span>
+<span class="n">converted_soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">converted_content</span><span class="p">)</span>
+</code></pre></div>
+<p>The lesson “<a href="../lessons/intro-to-beautiful-soup">Intro to Beautiful Soup</a>” teaches how to grab sections of
+a web page by their tags. But we can also select sections of the page by
+<em>attributes</em>, HTML code that modifies elements. Looking at the HTML from
+this page, notice that the text of our names are enclosed in the tag
+ &lt;p class=“name”&gt;. The class attribute allows the page’s <a href="http://www.w3schools.com/css/">Cascading
+Style Sheets</a> (CSS) settings to change the look of all elements that
+share the “name” <em>class</em> at once. CSS itself is an important tool for web
+designers. For those interested in learning more on this aspect of CSS,
+I recommend <a href="http://www.codecademy.com/courses/css-coding-with-style">Code Academy’s</a> interactive lessons in its web
+fundamentals track. In mining data from the web, though, attributes like
+class give us a pattern to separate out certain values.</p>
+
+<p>What we want is to get the elements where the class attribute’s value is
+“name”. When dealing with most types of attributes, Beautiful Soup can
+select parts of the page using the same syntax as HTML. The class
+attribute makes things a little tricky because Python uses “class” to
+define new types of objects. Beautiful Soup gets around this by making
+us search for class followed by an underscore: <code>class_=“value”</code>.
+Beautiful Soup objects’ <code>.find_all()</code> method will generate a Python list
+of Beautiful Soup objects that match the HTML tags or attributes set as
+<em>parameters</em>. The method <code>.get_text()</code> extracts just the text from
+Beautiful Soup objects, so
+<code>“ &lt;p class=“name”&gt;&lt;a name=“n1”&gt;&lt;/a&gt;A-Aku Tulikovich&lt;/p&gt; “.get_text()</code>
+will become “<em>A-Aku Tulikovich</em>”. We need to use <code>.get_text()</code> on each
+item in the list, then append it to a new list containing just the
+names:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#creating the final names list</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c">#creating the list with .find_all() and looping through it</span>
+<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">converted_soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s">&quot;name&quot;</span><span class="p">):</span>
+    <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+</code></pre></div>
+<p>To make sure it worked, let’s check the number of names and then see if
+they look like we expect:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#check the number of names</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+
+<span class="o">&gt;</span> <span class="mi">190</span>
+
+<span class="c">#see the first twenty names in the list</span>
+<span class="n">names</span><span class="p">[:</span><span class="mi">20</span><span class="p">]</span>
+
+<span class="o">&gt;</span> <span class="p">[</span><span class="s">u&#39;A-Aku Tulikovich &#39;</span><span class="p">,</span> <span class="s">u&#39;Aab Avgust Mikhailovich&#39;</span><span class="p">,</span> <span class="s">u&#39;Aab Avgust Khristianovich&#39;</span><span class="p">,</span> <span class="s">u&#39;Aab Aleksandr Aleksandrovich&#39;</span><span class="p">,</span> <span class="s">u&quot;Aab Aleksandr Khrist&#39;ianovich&quot;</span><span class="p">,</span> <span class="s">u&quot;Aab Al&#39;bert Viktorovich&quot;</span><span class="p">,</span> <span class="s">u&quot;Aab Al&#39;brekht Aleksandrovich&quot;</span><span class="p">,</span> <span class="s">u&#39;Aab Amaliia Andreevna&#39;</span><span class="p">,</span> <span class="s">u&#39;Aab Amaliia Ivanovna&#39;</span><span class="p">,</span> <span class="s">u&#39;Aab Angelina Andreevna&#39;</span><span class="p">,</span> <span class="s">u&#39;Aab Andrei Andreevich&#39;</span><span class="p">,</span> <span class="s">u&#39;Aab Andrei Filippovich&#39;</span><span class="p">,</span> <span class="s">u&#39;Aab Arvid Karlovich&#39;</span><span class="p">,</span> <span class="s">u&quot;Aab Arnol&#39;d Aleksandrovich&quot;</span><span class="p">,</span> <span class="s">u&#39;Aab Artur Avgustovich&#39;</span><span class="p">,</span> <span class="s">u&quot;Aab Artur Vil&#39;gel&#39;movich&quot;</span><span class="p">,</span> <span class="s">u&quot;Aab Aelita Arnol&#39;dovna&quot;</span><span class="p">,</span> <span class="s">u&#39;Aab Viktor Aleksandrovich&#39;</span><span class="p">,</span> <span class="s">u&#39;Aab Viktor Aleksandrovich&#39;</span><span class="p">,</span> <span class="s">u&quot;Aab Viktor Vil&#39;gel&#39;movich&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>The ‘u’ in front of each of the names indicates that they are <em>unicode</em>
+<em>objects</em> in Python, not <em>strings</em>. But when Python needs a string, it will
+automatically change any unicode to be a string if it only uses ASCII
+characters or else throw a “unicodedecode error”. Fortunately, because
+we have transliterated all the Cyrillic characters, this list fits
+Python’s needs. If we had not parsed the transliterated page, that would
+be easy to handle with the transliterate function from earlier. All it
+would take is to use the transliterate function on the text from each
+item in the list before appending it to the final list.</p>
+
+<p>Transliteration can only do so much. Except for proper names, it can
+tell you little about the content of the source being transliterated.
+Yet the ability to transliterate automatically is of great use when
+dealing with lots of names or for people who prefer or need to use ASCII
+characters. It is a simple tool but one that can be an enormous time
+saver.</p>
+
+	        </div>
+
+	        <div class="author-info">
+	   	        <p class="author-name">About the author</p>
+			    <div class="author-description"><p>
+                
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                       Seth Bernstein is a postdoctoral fellow at the Higher School of Economics 
+in Moscow.  He defended his doctoral dissertation, "Communist Upbringing 
+under Stalin: The Political Socialization and Militarization of Soviet 
+Youth, 1934-1941" at the University of Toronto in 2013.
+&nbsp;
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+		        </p>
+			    </div>
+	        </div>
+        </article>
+    </div>
+
+    </div> <!-- end below-nav -->
+
+<footer role="contentinfo">
+
+          <div class="additional">
+          <ul id="menu-main-menu" class="additional">
+            <li class="menu-item"><a href="http://programminghistorian.org/about">About</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/lessons">Lessons</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/contribute">Contribute</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/project-team">Project Team</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/news.html">News</a></li>
+          </ul>
+        </div>
+
+
+<p><em>The Programming Historian</em> is released under the <a href="http://creativecommons.org/licenses/by/2.0/" rel="license">CC-BY</a> license.</p>
+
+<p class="github">
+        <a href="https://github.com/programminghistorian/jekyll">Hosted on GitHub <img src="http://programminghistorian.org/images/GitHub-Mark-32px.png" title="GitHub logo"></a> 
+		<a href="https://github.com/programminghistorian/jekyll/commits/gh-pages/lessons/transliterating.md">Track Changes</a>&nbsp;&#183;&nbsp;
+		<a href="https://github.com/programminghistorian/jekyll/wiki/Reporting-Issues">Report an Issue</a>
+</p>
+
+</footer>
+
+
+    </body>
+</html>

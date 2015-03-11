@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html>
+
+	  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <!-- Mobile viewport optimized: h5bp.com/viewport -->
+    <meta name="viewport" content="width=device-width">
+    
+    <!--Font awesome CDN -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,700|Crete+Round' rel='stylesheet' type='text/css'>
+    <link href="http://programminghistorian.org/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://programminghistorian.org/css/github.css">
+
+    <title>Getting Started with Online Sources</title>
+        
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://programminghistorian.org/js/ui.js"></script>
+    <script type="text/javascript" src="http://programminghistorian.org/js/ext_links.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('.slide-trigger').collapsable();
+      });
+    </script>
+
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2752866-8']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+  </head>
+
+
+
+
+  <body>
+
+    <header role="banner">
+    <h1><a href="http://programminghistorian.org">The Programming Historian</a></h1>
+
+	        <div class="additional">
+          <ul id="menu-main-menu" class="additional">
+            <li class="menu-item"><a href="http://programminghistorian.org/about">About</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/lessons">Lessons</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/contribute">Contribute</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/project-team">Project Team</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/news.html">News</a></li>
+          </ul>
+        </div>
+
+	</header>
+
+	<div role="main">
+		<article>
+			<header>
+			    <p class="kicker">May 27, 2013</p>
+				<h1><a href="http://programminghistorian.org/lessons/deprecated/getting-started.html">Getting Started with Online Sources</a></h1>
+				<p class="byline">By
+				
+				
+                      
+                           
+                                 William J. Turkel
+                           
+                      
+                           
+                                 and Adam Crymble
+                           
+                      
+                
+				</p>
+				
+				
+				
+				<ul class="credits">Reviewed by
+				
+                      
+                           
+                                 Miriam Posner, Jim Clifford
+                           
+                      
+                
+                </ul>
+                
+				
+			</header>
+
+			<div class="content">
+	              <h2 id="lesson-goals">Lesson Goals</h2>
+
+<p>This first lesson in our section on dealing with Online Sources is
+designed to get you and your computer set up to start programming. We
+will focus on installing the relevant software – all free and reputable
+– and finally we will help you to get your toes wet with some simple
+programming that provides immediate results.</p>
+
+<p>In this opening module you will install the <a href="http://www.python.org/">Python programming
+language</a>, the <a href="http://www.crummy.com/software/BeautifulSoup/">Beautiful Soup HTML/XML parser</a>, and <a href="http://www.activestate.com/komodo-edit">Komodo
+Edit</a>. Once everything is installed, you will write your first
+programs, “Hello World” in Python and HTML.</p>
+
+<h2 id="the-python-programming-language">the Python Programming Language</h2>
+
+<p>The first programming language we will introduce in the Programming
+Historian is Python, a free, open source language. Unless otherwise
+noted, we will be using <strong>Python v.2</strong> throughout. Version 3 is
+available but we have elected to stick with version 2 for now because
+it’s the most widely used version and it is the one that ships
+preinstalled on new Macs. Python 3 has different syntax (think grammar
+rules) and if you are trying to use Python 3 with the Programming
+Historian, you may run into difficulties. We welcome version 3
+translations of any of our lessons.</p>
+
+<h2 id="step-1-–-install-and-set-up-software">Step 1 – Install and Set Up Software</h2>
+
+<p>In order to work through the techniques in this book, you will need to
+download and install some freely available software. We have provided
+instructions for Mac, Windows and Linux. Once you have installed the
+software for your operating system, skip down to Step 2. If you run into
+trouble with our instructions or find something that doesn’t work on
+your platform, please let us know.</p>
+
+<h3 id="choose-your-operating-system">Choose Your Operating System</h3>
+
+<h4 id="mac-instructions">Mac Instructions</h4>
+
+<p><img src="../images/apple-150x150.png" alt="Mac Instructions"></p>
+
+<p>Mac Instructions</p>
+
+<ul>
+<li><p>##### Back up your computer</p>
+
+<p>Mac users can take advantage of the <a href="http://support.apple.com/kb/ht1427">Time Machine</a> for this.</p></li>
+<li><p>##### Install Python v.2</p>
+
+<p>As of May 2012, Mac OS X comes preinstalled with Python 2. You can
+check to see if you have Python installed by launching the Terminal
+in the <code>‘Applications/Utilities’</code> directory and entering
+<code>which python</code> followed by the Enter key. Pushing the Enter key
+sends the command to the computer when using the terminal. If you
+see <code>“/usr/bin/python”</code> then you are all set. If not, close the
+Terminal, download the latest stable release of the Python
+programming language (Version 2.7.3 as of May 2012) and install it
+by following the instructions on the Python website.</p></li>
+<li><p>##### Create a Directory</p>
+
+<p>To stay organized, it’s best to have a dedicated directory (folder)
+on your computer where you will keep your Python programs (e.g.,
+<code>programming-historian</code>) and save it anywhere you like on your hard
+drive.</p></li>
+<li><p>##### Beautiful Soup</p>
+
+<p>Download the latest version of [Beautiful Soup]<a href="http://www.crummy.com/software/BeautifulSoup/">Beautiful Soup
+HTML/XML parser</a> and copy it to the directory where you are going to
+put your own programs. Beautiful Soup is a library (a collection of
+prewritten code) that makes it easy for Python programs to break web
+pages down into meaningful chunks that can be further processed.</p></li>
+<li><p>##### Install Komodo Edit</p>
+
+<p>Komodo Edit is a free and open source code editor. You can download
+a copy from the <a href="http://www.activestate.com/komodo-edit">Komodo Edit website</a>. Install it from
+the <code>.DMG</code> file</p></li>
+<li><p>##### Start Komodo Edit</p>
+
+<p>It should look something like this:</p>
+
+<p><img src="../images/komodo-edit-mac.png" alt="" title="komodo-edit-mac"></p>
+
+<p>Komodo Edit on a Mac</p>
+
+<p>If you don’t see the Toolbox pane on the right hand side, choose
+<code>View-&gt;Tabs &amp; Sidebars -&gt;Toolbox</code>. It doesn’t matter if the Project
+pane is open or not. Take some time to familiarize yourself with the
+layout of the Komodo editor. The Help file is quite good</p></li>
+<li><p>##### Configure Komodo Edit</p>
+
+<p>Now you need to set up the editor so that you can run Python
+programs. In the Toolbox window, click on the gear icon and select
+“<code>New Command…</code>“. This will open a new dialog window. Rename your
+command to “<code>Run Python</code>” and feel free to change the icon if you
+like. In the</p>
+
+<p>“<code>Command</code>” box, type</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">%</span><span class="p">(</span><span class="n">python</span><span class="p">)</span> <span class="o">%</span><span class="n">f</span>
+
+<span class="c">#and under &quot;Start in,&quot; enter</span>
+
+<span class="o">%</span><span class="n">D</span>
+</code></pre></div>
+<p>Click OK. Your new Run Python command should appear in the Toolbox
+pane</p></li>
+</ul>
+
+<h4 id="windows-instructions">Windows Instructions</h4>
+
+<p><img src="../images/windows-150x150.png" alt="Windows Instructions"></p>
+
+<p>Windows Instructions</p>
+
+<ul>
+<li><p>##### Back up your computer</p></li>
+<li><p>##### Install Python v.2</p>
+
+<p>Go to the <a href="http://www.python.org/">Python website</a>, download
+the latest stable release of the Python programming language
+(Version 2.7.3 as of May 2012) and install it by following the
+instructions on the Python website.</p></li>
+<li><p>##### Create a Directory</p>
+
+<p>To stay organized, it’s best to have a dedicated directory (folder)
+on your computer where you will keep your Python programs (e.g.,
+<code>programming-historian</code>) and save it anywhere you like on your hard
+drive.</p></li>
+<li><p>##### Beautiful Soup</p>
+
+<p>Download the latest version of [Beautiful Soup]<a href="http://www.crummy.com/software/BeautifulSoup/">Beautiful Soup
+HTML/XML parser</a> and copy it to the directory where you are going to
+put your own programs. Beautiful Soup is a library (a collection of
+prewritten code) that makes it easy for Python programs to break web
+pages down into meaningful chunks that can be further processed.</p></li>
+<li><p>##### Install Komodo Edit</p>
+
+<p>Komodo Edit is a free and open source code editor. You can download
+a copy from the <a href="http://www.activestate.com/komodo-edit">Komodo Edit website</a>.</p></li>
+<li><p>##### Start Komodo Edit</p>
+
+<p>It should look something like this:</p>
+
+<p><img src="../images/komodo-edit-windows.png" alt="Komodo Edit on Windows" title="komodo-edit-windows"></p>
+
+<p>Komodo Edit on Windows</p>
+
+<p>If you don’t see the Toolbox pane on the right hand side, choose
+<code>View -&gt; Tabs -&gt; Toolbox</code>. It doesn’t matter if the Project pane is
+open or not. Take some time to familiarize yourself with the layout
+of the Komodo editor. The Help file is quite good</p></li>
+<li><p>##### Configure Komodo Edit</p>
+
+<p>Now you need to set up the editor so that you can run Python
+programs.</p></li>
+</ul>
+<div class="highlight"><pre><code class="language-text" data-lang="text">1.  Choose `Edit -&gt; Preferences`. This will open a new dialog
+    window. Select the Python category and set the
+    “`Default Python Interpreter`” (it should be
+    `C:\Python27\Python.exe`)\
+     If it looks like this, click OK:
+
+    ![Komodo Default Python Interpreter Settings][]
+
+    Default Python Interpreter
+
+2.  Next choose `Toolbox-&gt;Add-&gt;New Command`. This will open a new
+    dialog window. Rename your command to “`Run Python`“. Under
+    “`Command`,” type:
+
+    ``` python
+    %(python) %f
+    ```
+
+    If you forget this command, Python will hang mysteriously
+    because it isn’t receiving a program as input.
+
+3.  Under “`Start in`,” enter `%D` If it looks like this, click OK:\
+
+    ![Run Python Command Windows][]
+
+    “Run Python” Command
+
+Your new command should appear in the Toolbox pane. You may need to
+restart your machine after completing this step before Python will
+work with Komodo Edit
+</code></pre></div>
+<h4 id="linux-instructions">Linux Instructions</h4>
+
+<p><img src="../images/linux-150x150.png" alt="Linux Instructions"></p>
+
+<p>Linux Instructions</p>
+
+<p>Thanks to John Fink for providing the basis of this section. These
+instructions are for Ubuntu 12.04 LTS, but should work for any apt based
+system such as Debian, or Linux Mint, provided you have sudo installed.</p>
+
+<ul>
+<li>  Back up your computer</li>
+<li>  ##### Install Python v. 2 and Python “Beautiful Soup” module</li>
+</ul>
+<div class="highlight"><pre><code class="language-text" data-lang="text">1.  Open a terminal (`Dash Home`, then type `Terminal`, then click
+    on the Terminal icon).
+2.  Now type: `sudo apt-get install python2.7 python-beautifulsoup`
+3.  Enter your password, and then type `Y` to finish the install.
+    Note that you probably have Python 2.7 installed already, so
+    don’t be alarmed if Ubuntu tells you that.
+</code></pre></div>
+<ul>
+<li><p>##### Create a directory</p>
+
+<p>You will keep your Python programs in this directory. It can be
+anywhere you like, but it is probably best to put it in your home
+folder. Something like this in your open terminal window should do
+the trick:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">cd ~
+mkdir programming-historian
+</code></pre></div></li>
+<li><p>##### Install Komodo Edit</p>
+
+<p>Komodo Edit is a free and open source code editor that you can find
+at the <a href="http://www.activestate.com/komodo-edit">Komoto Edit Website</a>. Once you’ve downloaded
+it, open it with Ubuntu’s package manager, extract it to your home
+directory, and follow the installation instructions.\
+ After installation, you will probably find Komodo Edit in your home
+directory at <code>Komodo-Edit-7/bin/komodo</code>. Open the home folder, go to
+the <code>Komodo-Edit-7/bin</code> directory, and click on komodo. You can also
+right click on the Komodo icon in your launcher and click
+“<code>Lock to Launcher</code>” to have Komodo saved permanently to your
+launcher bar.</p></li>
+<li><p>##### Make a “Run Python” Command in Komodo Edit</p></li>
+</ul>
+<div class="highlight"><pre><code class="language-text" data-lang="text">1.  In Komodo Edit, click the gear icon under `Toolbox` and select
+    `New Command`.
+2.  In the top field type “`Run Python File`“
+3.  In the Command field, type: `%(python) %f` Then hit the OK
+    button at the bottom of the Add Command window.
+</code></pre></div>
+<h2 id="step-2-–-“hello-world”-in-python">Step 2 – “Hello World” in Python</h2>
+
+<p>It is traditional to begin programming in a new language by trying to
+create a program that says “hello world” and terminates. We will show
+you how to do this in Python and HTML.</p>
+
+<p>Python is a good programming language for beginners because it is very
+high-level. It is possible, in other words, to write short programs that
+accomplish a lot. The shorter the program, the more likely it is for the
+whole thing to fit on one screen, and the easier it is to keep track of
+all of it in your mind.</p>
+
+<p>The languages that we will be using are all interpreted. This means that
+there is a special computer program (known as an interpreter) that knows
+how to follow instructions written in that language. One way to use the
+interpreter is to store all of your instructions in a file, and then run
+the interpreter on the file. A file that contains programming language
+instructions is known as a program. The interpreter will execute each of
+the instructions that you gave it in your program and then stop. Let’s
+try this.</p>
+
+<p>In Komodo, create a new file, enter the following two-line program and
+save it to your <code>programming-historian</code> directory as <code>hello-world.py</code></p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c"># hello-world.py</span>
+<span class="k">print</span> <span class="s">&#39;hello world&#39;</span>
+</code></pre></div>
+<p>You should then be able to double-click the “<code>Run Python</code>” button that
+you created in the previous step to execute your program. If all went
+well, it should look something like this (click on the image to see a
+full-size copy):</p>
+
+<p><img src="../images/hello-world1.png" alt="hello world in Komodo Edit on a Mac" title="hello-world"></p>
+
+<p>“Hello World” in Python on a Mac</p>
+
+<p>Notice that the output of your program was printed to the
+“<code>Command Output</code>” pane. If you cannot see your Command Output pane, you
+can open it in the menu: <code>View-&gt; Tabs &amp; Sidebars -&gt; Command Output</code>.</p>
+
+<h3 id="interacting-with-a-python-shell">Interacting with a Python shell</h3>
+
+<p>Another way to interact with an interpreter is to use what is known as a
+shell. You can type in a statement and press the Enter key, and the
+shell will respond to your command. Using a shell is a great way to test
+statements to make sure that they do what you think they should. This is
+done slightly differently on Mac, Linux and Windows.</p>
+
+<h4 id="mac-&amp;-linux-instructions">Mac &amp; Linux Instructions</h4>
+
+<p><img src="../images/mac-linux.png" alt=""></p>
+
+<p>You can run a Python shell by launching the “terminal”. On the Mac, open
+the Finder and double-click on <code>Applications -&gt; Utilities -&gt; Terminal</code>
+then typing “<code>python</code>” into the window that opens on your screen. For
+Linux, go to <code>Applications-&gt; Accessories -&gt; Terminal</code>and do the same. At
+the Python shell prompt, type</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">print</span> <span class="s">&#39;hello world&#39;</span>
+</code></pre></div>
+<p>and press Enter. The computer will respond with</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">hello</span> <span class="n">world</span>
+</code></pre></div>
+<p>When we want to represent an interaction with the shell, we will use
+<code>-&gt;</code> to indicate the shell’s response to your command, as shown below:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">print</span> <span class="s">&#39;hello world&#39;</span>
+<span class="o">-&gt;</span> <span class="n">hello</span> <span class="n">world</span>
+</code></pre></div>
+<p>On your screen, it will look more like this:</p>
+
+<p><img src="../images/hello-world-terminal.png" alt="hello world terminal on a Mac" title="hello-world-terminal"></p>
+
+<p>Python Shell in Mac Terminal</p>
+
+<h4 id="windows-instructions">Windows Instructions</h4>
+
+<p><img src="../images/windows-150x150.png" alt="Windows Instructions"></p>
+
+<p>Windows Instructions</p>
+
+<p>You can run a Python Shell by double-clicking on the python.exe file. If
+you installed version 2.7 (the most recent as of May 2012), then this
+file is probably located in the <code>C:\Python27\python.exe</code> directory. In
+the shell window that opens on your screen type:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">print</span> <span class="s">&#39;hello world&#39;</span>
+</code></pre></div>
+<p>and press Enter. The computer will respond with</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">hello</span> <span class="n">world</span>
+</code></pre></div>
+<p>When we want to represent an interaction with the shell, we will use -&gt;
+to indicate the shell’s response to your command, as shown below:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">print</span> <span class="s">&#39;hello world&#39;</span>
+<span class="o">-&gt;</span> <span class="n">hello</span> <span class="n">world</span>
+</code></pre></div>
+<p>On your screen, it will look more like this:</p>
+
+<p><img src="../images/python-shell-win.png" alt="Python Shell on Windows" title="python-shell-win"></p>
+
+<p>Python Shell in Windows</p>
+
+<h2 id="step-4-–-“hello-world”-in-html">Step 4 – “Hello World” in HTML</h2>
+
+<h3 id="viewing-html-files">Viewing HTML files</h3>
+
+<p>When you are working with online sources, much of the time you will be
+using files that have been marked up with HTML (Hyper Text Markup
+Language). Your browser already knows how to interpret HTML, which is
+handy for human readers. Most browsers also let you see the HTML source
+for any page that you visit. The two images below show a typical web
+page (from the Old Bailey Online) and the HTML source used to generate
+that page, which you can see with the
+<code>Tools -&gt; Web Developer -&gt; Page Source</code> command in Firefox.</p>
+
+<p>When you’re working in the browser, you typically don’t want or need to
+see the source for a web page. If you are writing a page of your own,
+however, it can be very useful to see how other people accomplished a
+particular effect. You will also want to study HTML source as you write
+programs to manipulate web pages or automatically extract information
+from them.</p>
+
+<p><img src="../images/obo.png" alt="Old Bailey Online screenshot" title="obo"></p>
+
+<p>Old Bailey Online (OBO) Web Page</p>
+
+<p><img src="../images/obo-page-source.png" alt="Old Bailey Online page source" title="obo-page-source"></p>
+
+<p>HTML Source for OBO Web Page</p>
+
+<p>(To learn more about HTML, you may find it useful at this point to work
+through the <a href="http://www.w3schools.com/html/default.asp">W3 Schools HTML tutorial</a>. Detailed knowledge of HTML
+isn’t immediately necessary to continue reading, but any time that you
+spend learning HTML will be amply rewarded in your work as a digital
+historian or digital humanist.)</p>
+
+<h3 id="“hello-world”-in-html">“Hello World” in HTML</h3>
+
+<p>HTML is what is known as a “markup” language. In other words, HTML is
+text that has been “marked up” with tags that provide information for
+the interpreter (which is often a web browser). Suppose you are
+formatting a bibliographic entry and you want to indicate the title of a
+work by italicizing it. In HTML you use &lt;em&gt; tags (“em” stands for
+emphasis). So part of your HTML file might look like this</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml">... in Cohen and Rosenzweig&#39;s <span class="nt">&lt;em&gt;</span>Digital History<span class="nt">&lt;/em&gt;</span>, for example ...
+</code></pre></div>
+<p>The simplest HTML file consists of tags which indicate the beginning and
+end of the whole document, and tags which identify a head and a body
+within that document. Information about the file usually goes into the
+head, whereas information that will be displayed on the screen usually
+goes into the body.</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>Hello World!<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div>
+<p>You can try creating some HTML code. Go to Komodo, and choose
+<code>File -&gt; New</code>. Copy the code below into the editor. The first line tells
+the browser what kind of file it is. The html tag has the text direction
+set to ltr (left to right) and the lang (language) set to US English.
+The title tag in the head of the HTML document contains material that is
+usually displayed in the top bar of a window when the page is being
+viewed, and in Firefox tabs.</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">dir=</span><span class="s">&quot;ltr&quot;</span> <span class="na">lang=</span><span class="s">&quot;en-US&quot;</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span><span class="c">&lt;!-- Insert your title here --&gt;</span><span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+
+<span class="nt">&lt;body&gt;</span>
+    <span class="c">&lt;!-- Insert your content here --&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div>
+<p>Change both</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- Insert your title here --&gt;</span>
+</code></pre></div>
+<p>and</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- Insert your content here --&gt;</span>
+</code></pre></div>
+<p>to</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml">Hello World!
+</code></pre></div>
+<p>Save the file to your <code>programming-historian</code> directory as
+<code>hello-world.html</code>. Now go to Firefox and choose <code>File -&gt; New Tab</code> and
+then <code>File -&gt; Open File</code>. Choose <code>hello-world.html</code>. Your message should
+appear in the browser. Note the difference between opening an HTML file
+with a browser like Firefox (which interprets it) and opening the same
+file with an editor like Komodo (which does not).</p>
+
+<h2 id="step-5-–-back-up-your-work">Step 5 – Back Up Your Work</h2>
+
+<p>Once you begin to program, it is crucial that you make backups of your
+work regularly. Each day before you do any programming, make sure to
+back up your <a href="http://www.zotero.org/">Zotero</a> database. At the end of a day’s work, make
+another backup of the Zotero database and of any programs that you’ve
+written that day. You should back up your whole computer at least
+weekly, and preferably more frequently. It is also a good idea to make
+off-site backups of your work, so that you don’t lose everything if
+something happens to your computer or to your home or office. Sites like
+<a href="https://www.jungledisk.com/">Jungle Disk</a> and <a href="https://www.dropbox.com/home">Dropbox</a> provide easy-to-use and relatively
+inexpensive online backup options.</p>
+
+<h2 id="concluding-the-first-lesson">Concluding the First Lesson</h2>
+
+<p>Keep in touch with us. As you work through the examples in this book you
+will, no doubt, want to apply similar techniques to your own sources. If
+you come up with a variation or generalization, e-mail us or the author
+of the lesson to share your experiences. Likewise, if you run into
+trouble or can’t figure out how to modify one of our programs so it
+applies to your situation, we’d like to hear from you. We can try to
+help you get something running, or direct attention to whomever put the
+lesson together.</p>
+
+<h3 id="other-resources">Other Resources</h3>
+
+<p>As you’re working through the tutorials here, you will want to have a
+few key resources open in your browser. Until you become familiar with
+the programming languages that we’re using, it is nice to have a few
+different introductory treatments to look at. There are many good online
+resources like the ones listed below, which are great for Python and
+HTML learning. Other programming languages have equally valuable sets of
+introductory texts and websites which you can find online.</p>
+
+<ul>
+<li>  <a href="http://wiki.python.org/moin/BeginnersGuide/NonProgrammers">Python for Non-programmers</a></li>
+<li>  <a href="http://www.w3schools.com/html/default.asp">W3 Schools HTML Tutorial</a></li>
+<li>  <a href="http://www.w3schools.com/html5/default.asp">W3 Schools HTML5 Tutorial</a></li>
+</ul>
+
+<p>As you proceed (or if you already have some programming experience)
+you’ll probably prefer more general references like:</p>
+
+<ul>
+<li>  <a href="http://wiki.python.org/moin/BeginnersGuide/Programmers">Python for Programmers</a></li>
+<li>  <a href="http://docs.python.org/">Python documentation page</a></li>
+<li>  <a href="http://docs.python.org/tut/tut.html">Python tutorial</a></li>
+<li>  <a href="http://docs.python.org/lib/lib.html">Python library reference</a></li>
+<li>  Pilgrim, <a href="http://diveintopython.org/">Dive into Python</a></li>
+</ul>
+
+<p>We also like to have a few printed books ready-to-hand, especially</p>
+
+<ul>
+<li>  Lutz, <em><a href="http://www.worldcat.org/oclc/156890981">Learning Python</a></em></li>
+<li>  Lutz, <em><a href="http://www.worldcat.org/oclc/65765375">Programming Python</a></em></li>
+<li>  Martelli, Ravenscroft and Ascher, <em><a href="http://www.worldcat.org/oclc/59007845">Python Cookbook</a></em></li>
+</ul>
+
+<p>The resources mentioned in this chapter include:</p>
+
+<ul>
+<li>  <a href="http://stackoverflow.com/">Stack Overflow</a></li>
+<li>  <a href="http://mail.python.org/mailman/listinfo/tutor">Tutor</a></li>
+<li>  <a href="http://www.zotero.org/">Zotero</a></li>
+<li>  <a href="https://www.jungledisk.com/">Jungle Disk</a></li>
+<li>  <a href="https://www.dropbox.com/home">Dropbox</a></li>
+</ul>
+
+<p>Other references will be cited as authors make use of them.</p>
+
+<h3 id="suggested-readings">Suggested readings</h3>
+
+<p>Some of our readers have expressed an interest in using The Programming
+Historianfor formal or informal coursework. To get a solid foundation in
+Python programming, it is probably best to pair these exercises with
+some additional readings. We like Mark Lutz’s Learning Python, 3rd ed.
+Sebastopol, CA: O’Reilly, 2008.</p>
+
+<ul>
+<li>  Lutz, <a href="http://oreilly.com/catalog/9780596513986/">Learning Python</a>
+
+<ul>
+<li>  (optional) Ch. 1: A Python Q&amp;A Session</li>
+<li>  Ch. 2: How Python Runs Programs</li>
+<li>  Ch. 3: How You Run Programs</li>
+</ul></li>
+</ul>
+
+<h3 id="code-syncing">Code Syncing</h3>
+
+<p>To follow along with future lessons it is important that you have the
+right files and programs in your “programming-historian” directory. At
+the end of each chapter you can download the “programming-historian” zip
+file to make sure you have the correct code.</p>
+
+<ul>
+<li>  programming-historian (<a href="../images/programming-historian.zip">zip</a>)</li>
+</ul>
+
+	        </div>
+
+	        <div class="author-info">
+	   	        <p class="author-name">About the authors</p>
+			    <div class="author-description"><p>
+                
+                   
+                   
+                       William J. Turkel is an Associate Professor of History at the
+University of Western Ontario and director of Digital Infrastructure
+for the Network in Canadian History & Environment (NiCHE).
+&nbsp;
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+		        
+                   
+                   
+                   
+                   
+                       Adam Crymble is a Lecturer of Digital History at the University of 
+Hertfordshire.
+&nbsp;
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+		        </p>
+			    </div>
+	        </div>
+        </article>
+    </div>
+
+    </div> <!-- end below-nav -->
+
+<footer role="contentinfo">
+
+          <div class="additional">
+          <ul id="menu-main-menu" class="additional">
+            <li class="menu-item"><a href="http://programminghistorian.org/about">About</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/lessons">Lessons</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/contribute">Contribute</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/project-team">Project Team</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/news.html">News</a></li>
+          </ul>
+        </div>
+
+
+<p><em>The Programming Historian</em> is released under the <a href="http://creativecommons.org/licenses/by/2.0/" rel="license">CC-BY</a> license.</p>
+
+<p class="github">
+        <a href="https://github.com/programminghistorian/jekyll">Hosted on GitHub <img src="http://programminghistorian.org/images/GitHub-Mark-32px.png" title="GitHub logo"></a> 
+		<a href="https://github.com/programminghistorian/jekyll/commits/gh-pages/lessons/deprecated/getting-started.md">Track Changes</a>&nbsp;&#183;&nbsp;
+		<a href="https://github.com/programminghistorian/jekyll/wiki/Reporting-Issues">Report an Issue</a>
+</p>
+
+</footer>
+
+
+    </body>
+</html>

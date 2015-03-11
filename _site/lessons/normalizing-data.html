@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+
+	  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <!-- Mobile viewport optimized: h5bp.com/viewport -->
+    <meta name="viewport" content="width=device-width">
+    
+    <!--Font awesome CDN -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,700|Crete+Round' rel='stylesheet' type='text/css'>
+    <link href="http://programminghistorian.org/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://programminghistorian.org/css/github.css">
+
+    <title>Normalizing Textual Data with Python</title>
+        
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://programminghistorian.org/js/ui.js"></script>
+    <script type="text/javascript" src="http://programminghistorian.org/js/ext_links.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('.slide-trigger').collapsable();
+      });
+    </script>
+
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2752866-8']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+  </head>
+
+
+
+
+  <body>
+
+    <header role="banner">
+    <h1><a href="http://programminghistorian.org">The Programming Historian</a></h1>
+
+	        <div class="additional">
+          <ul id="menu-main-menu" class="additional">
+            <li class="menu-item"><a href="http://programminghistorian.org/about">About</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/lessons">Lessons</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/contribute">Contribute</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/project-team">Project Team</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/news.html">News</a></li>
+          </ul>
+        </div>
+
+	</header>
+
+	<div role="main">
+		<article>
+			<header>
+			    <p class="kicker">July 17, 2012</p>
+				<h1><a href="http://programminghistorian.org/lessons/normalizing-data.html">Normalizing Textual Data with Python</a></h1>
+				<p class="byline">By
+				
+				
+                      
+                           
+                                 William J. Turkel
+                           
+                      
+                           
+                                 and Adam Crymble
+                           
+                      
+                
+				</p>
+				
+				
+				
+				<ul class="credits">Reviewed by
+				
+                      
+                           
+                                 Miriam Posner
+                           
+                      
+                           
+						         , Jim Clifford
+                           
+                      
+                           
+                                 and Francesca Benatti
+                           
+                      
+                
+                </ul>
+                
+				
+			</header>
+
+			<div class="content">
+	              <h2 id="lesson-goals">Lesson Goals</h2>
+
+<p>The list that we created in the <a href="../lessons/from-html-to-list-of-words-2">From HTML to a List of Words (2)</a>
+needs some <em>normalizing</em> before it can be used further. We are going to do
+this by applying additional string methods, as well as by using <em>regular</em>
+<em>expressions</em>. Once normalized, we will be able to more easily analyze our
+data.</p>
+
+<h3 id="files-needed-for-this-lesson">Files Needed For This Lesson</h3>
+
+<ul>
+<li>  <em>html-to-list-1.py</em></li>
+<li>  <em>obo.py</em></li>
+</ul>
+
+<p>If you do not have these files from the previous lesson, you can
+download a <a href="../lessons/from-html-to-list-of-words-2#code-syncing">zip file from the previous lesson here.</a></p>
+
+<h2 id="cleaning-up-the-list">Cleaning up the List</h2>
+
+<p>In <a href="../lessons/from-html-to-list-of-words-2">From HTML to a List of Words (2)</a>, we wrote a Python program
+called <em>html-to-list-1.py</em> which downloaded a <a href="http://www.oldbaileyonline.org/print.jsp?div=t17800628-33">web page</a>, stripped
+out the HTML formatting and metadata and returned a list of “words” like
+the one shown below. Technically, these entities are called “<em>tokens</em>”
+rather than “words”. They include some things that are, strictly
+speaking, not words at all (like the abbreviation &amp;c. for “etcetera”).
+They also include some things that may be considered composites of more
+than one word. The possessive “Akerman’s,” for example, is sometimes
+analyzed by linguists as two words: “Akerman” plus a possessive marker.
+Is “o’clock” one word or two? And so on.</p>
+
+<p>Turn back to your program <em>html-to-list-1.py</em> and make sure that your
+results look something like this:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="p">[</span><span class="s">&#39;BENJAMIN&#39;</span><span class="p">,</span> <span class="s">&#39;BOWSEY,&#39;</span><span class="p">,</span> <span class="s">&#39;Breaking&#39;</span><span class="p">,</span> <span class="s">&#39;Peace&#39;</span><span class="p">,</span> <span class="s">&#39;&gt;&#39;</span><span class="p">,</span>
+<span class="s">&#39;riot,&#39;</span><span class="p">,</span> <span class="s">&#39;28th&#39;</span><span class="p">,</span> <span class="s">&#39;June&#39;</span><span class="p">,</span> <span class="s">&#39;1780.&#39;</span><span class="p">,</span> <span class="s">&#39;324.&#39;</span><span class="p">,</span> <span class="s">&#39;BENJAMIN&#39;</span><span class="p">,</span>
+<span class="s">&#39;BOWSEY&#39;</span><span class="p">,</span> <span class="s">&#39;(a&#39;</span><span class="p">,</span> <span class="s">&#39;blackmoor&#39;</span><span class="p">,</span> <span class="s">&#39;)&#39;</span><span class="p">,</span> <span class="s">&#39;was&#39;</span><span class="p">,</span> <span class="s">&#39;indicted&#39;</span><span class="p">,</span>
+<span class="s">&#39;for&#39;</span><span class="p">,</span> <span class="s">&#39;that&#39;</span><span class="p">,</span> <span class="s">&#39;he&#39;</span><span class="p">,</span> <span class="s">&#39;together&#39;</span><span class="p">,</span> <span class="s">&#39;with&#39;</span><span class="p">,</span> <span class="s">&#39;five&#39;</span><span class="p">,</span>
+<span class="s">&#39;hundred&#39;</span><span class="p">,</span> <span class="s">&#39;other&#39;</span><span class="p">,</span> <span class="s">&#39;persons&#39;</span><span class="p">,</span> <span class="s">&#39;and&#39;</span><span class="p">,</span> <span class="s">&#39;more,&#39;</span><span class="p">,</span> <span class="s">&#39;did,&#39;</span><span class="p">,</span>
+<span class="s">&#39;unlawfully,&#39;</span><span class="p">,</span> <span class="s">&#39;riotously,&#39;</span><span class="p">,</span> <span class="s">&#39;and&#39;</span><span class="p">,</span> <span class="s">&#39;tumultuously&#39;</span><span class="p">,</span>
+<span class="s">&#39;assemble&#39;</span><span class="p">,</span> <span class="s">&#39;on&#39;</span><span class="p">,</span> <span class="s">&#39;the&#39;</span><span class="p">,</span> <span class="s">&#39;6th&#39;</span><span class="p">,</span> <span class="s">&#39;of&#39;</span><span class="p">,</span> <span class="s">&#39;June&#39;</span><span class="p">,</span> <span class="s">&#39;to&#39;</span><span class="p">,</span>
+<span class="s">&#39;the&#39;</span><span class="p">,</span> <span class="s">&#39;disturbance&#39;</span><span class="p">,</span> <span class="s">&#39;of&#39;</span><span class="p">,</span> <span class="s">&#39;the&#39;</span><span class="p">,</span> <span class="s">&#39;public&#39;</span><span class="p">,</span> <span class="s">&#39;peace&#39;</span><span class="p">,</span>
+<span class="s">&#39;and&#39;</span><span class="p">,</span> <span class="s">&#39;did&#39;</span><span class="p">,</span> <span class="s">&#39;begin&#39;</span><span class="p">,</span> <span class="s">&#39;to&#39;</span><span class="p">,</span> <span class="s">&#39;demolish&#39;</span><span class="p">,</span> <span class="s">&#39;and&#39;</span><span class="p">,</span> <span class="s">&#39;pull&#39;</span><span class="p">,</span>
+<span class="s">&#39;down&#39;</span><span class="p">,</span> <span class="s">&#39;the&#39;</span><span class="p">,</span> <span class="s">&#39;dwelling&#39;</span><span class="p">,</span> <span class="s">&#39;house&#39;</span><span class="p">,</span> <span class="s">&#39;of&#39;</span><span class="p">,</span> <span class="s">&#39;Richard&#39;</span><span class="p">,</span>
+<span class="s">&#39;Akerman&#39;</span><span class="p">,</span> <span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="s">&#39;against&#39;</span><span class="p">,</span> <span class="s">&#39;the&#39;</span><span class="p">,</span> <span class="s">&#39;form&#39;</span><span class="p">,</span> <span class="s">&#39;of&#39;</span><span class="p">,</span> <span class="s">&#39;the&#39;</span><span class="p">,</span>
+<span class="s">&#39;statute,&#39;</span><span class="p">,</span> <span class="s">&#39;&amp;c.&#39;</span><span class="p">,</span> <span class="s">&#39;ROSE&#39;</span><span class="p">,</span> <span class="s">&#39;JENNINGS&#39;</span><span class="p">,</span> <span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="s">&#39;Esq.&#39;</span><span class="p">,</span>
+<span class="s">&#39;sworn.&#39;</span><span class="p">,</span> <span class="s">&#39;Had&#39;</span><span class="p">,</span> <span class="s">&#39;you&#39;</span><span class="p">,</span> <span class="s">&#39;any&#39;</span><span class="p">,</span> <span class="s">&#39;occasion&#39;</span><span class="p">,</span> <span class="s">&#39;to&#39;</span><span class="p">,</span> <span class="s">&#39;be&#39;</span><span class="p">,</span>
+<span class="s">&#39;in&#39;</span><span class="p">,</span> <span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="s">&#39;part&#39;</span><span class="p">,</span> <span class="s">&#39;of&#39;</span><span class="p">,</span> <span class="s">&#39;the&#39;</span><span class="p">,</span> <span class="s">&#39;town,&#39;</span><span class="p">,</span> <span class="s">&#39;on&#39;</span><span class="p">,</span> <span class="s">&#39;the&#39;</span><span class="p">,</span>
+<span class="s">&#39;6th&#39;</span><span class="p">,</span> <span class="s">&#39;of&#39;</span><span class="p">,</span> <span class="s">&#39;June&#39;</span><span class="p">,</span> <span class="s">&#39;in&#39;</span><span class="p">,</span> <span class="s">&#39;the&#39;</span><span class="p">,</span> <span class="s">&#39;evening?&#39;</span><span class="p">,</span> <span class="s">&#39;-&#39;</span><span class="p">,</span> <span class="s">&#39;I&#39;</span><span class="p">,</span>
+<span class="s">&#39;dined&#39;</span><span class="p">,</span> <span class="s">&#39;with&#39;</span><span class="p">,</span> <span class="s">&#39;my&#39;</span><span class="p">,</span> <span class="s">&#39;brother&#39;</span><span class="p">,</span> <span class="s">&#39;who&#39;</span><span class="p">,</span> <span class="s">&#39;lives&#39;</span><span class="p">,</span>
+<span class="s">&#39;opposite&#39;</span><span class="p">,</span> <span class="s">&#39;Mr.&#39;</span><span class="p">,</span> <span class="s">&quot;Akerman&#39;s&quot;</span><span class="p">,</span> <span class="s">&#39;house.&#39;</span><span class="p">,</span> <span class="s">&#39;They&#39;</span><span class="p">,</span>
+<span class="s">&#39;attacked&#39;</span><span class="p">,</span> <span class="s">&#39;Mr.&#39;</span><span class="p">,</span> <span class="s">&quot;Akerman&#39;s&quot;</span><span class="p">,</span> <span class="s">&#39;house&#39;</span><span class="p">,</span> <span class="s">&#39;precisely&#39;</span><span class="p">,</span>
+<span class="s">&#39;at&#39;</span><span class="p">,</span> <span class="s">&#39;seven&#39;</span><span class="p">,</span> <span class="s">&quot;o&#39;clock;&quot;</span><span class="p">,</span> <span class="s">&#39;they&#39;</span><span class="p">,</span> <span class="s">&#39;were&#39;</span><span class="p">,</span> <span class="s">&#39;preceded&#39;</span><span class="p">,</span>
+<span class="s">&#39;by&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;man&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p>By itself, this ability to separate the document into words doesn’t buy
+us much because we already know how to read. We can use the text,
+however, to do things that aren’t usually possible without special
+software. We’re going to start by computing the frequencies of tokens
+and other linguistic units, a classic measure of a text.</p>
+
+<p>It is clear that our list is going to need some cleaning up before we
+can use it to count frequencies. In keeping with the practices
+established in <a href="../lessons/from-html-to-list-of-words-1">From HTML to a List of Words (1)</a>, let’s try to
+describe our algorithm in plain English first. We want to know the
+frequency of each meaningful word that appears in the trial transcript.
+So, the steps involved might look like this:</p>
+
+<ul>
+<li>  Convert all words to lower case so that “BENJAMIN” and “benjamin”
+are counted as the same word</li>
+<li>  Remove any strange or unusual characters</li>
+<li>  Count the number of times each word appears</li>
+<li>  Remove overly common words such as “it”, “the”, “and”, etc.</li>
+</ul>
+
+<h2 id="convert-to-lower-case">Convert to Lower Case</h2>
+
+<p>Typically tokens are <em>folded</em> to lower case when counting frequencies, so
+we’ll do that using the string method lower which was introduced in
+<a href="../lessons/manipulating-strings-in-python">Manipulating Strings in Python</a>. Since this is a string method we
+will have to apply it to the string: <em>text</em> in the <em>html-to-list1.py</em>
+program. Amend <em>html-to-list1.py</em> by adding the string tag <code>lower()</code> to
+the the end of the <em>text</em> string.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#html-to-list1.py</span>
+<span class="kn">import</span> <span class="nn">urllib2</span><span class="o">,</span> <span class="nn">obo</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s">&#39;http://www.oldbaileyonline.org/print.jsp?div=t17800628-33&#39;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">obo</span><span class="o">.</span><span class="n">stripTags</span><span class="p">(</span><span class="n">html</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="c">#add the string method here.</span>
+<span class="n">wordlist</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="p">(</span><span class="n">wordlist</span><span class="p">)</span>
+</code></pre></div>
+<p>You should now see the same list of words as before, but with all
+characters changed to lower case.</p>
+
+<p>By calling methods one after another like this, we can keep our code
+short and make some pretty significant changes to our program.</p>
+
+<p>Like we said before, Python makes it easy to do a lot with very little
+code!</p>
+
+<p>At this point, we might look through a number of other <em>Old Bailey Online</em>
+entries and a wide range of other potential sources to make sure that
+there aren’t other special characters that are going to cause problems
+later. We might also try to anticipate situations where we don’t want to
+get rid of punctuation (e.g., distinguishing monetary amounts like
+“$1629” or “£1295” from dates, or recognizing that “1629-40” has a
+different meaning than “1629 40”.) This is what professional programmers
+get paid to do: try to think of everything that might go wrong and deal
+with it in advance.</p>
+
+<p>We’re going to take a different approach. Our main goal is to develop
+techniques that a working historian can use during the research process.
+This means that we will almost always prefer approximately correct
+solutions that can be developed quickly. So rather than taking the time
+now to make our program robust in the face of exceptions, we’re simply
+going to get rid of anything that isn’t an accented or unaccented letter
+or an Arabic numeral. Programming is typically a process of “stepwise
+refinement”. You start with a problem and part of a solution, and then
+you keep refining your solution until you have something that works
+better.</p>
+
+<h2 id="python-regular-expressions">Python Regular Expressions</h2>
+
+<p>We’ve eliminated upper case letters. That just leaves all the
+punctuation to get rid of. Punctuation will throw off our frequency
+counts if we leave them in. We want “evening?” to be counted as
+“evening” and “1780.” as “1780”, of course.</p>
+
+<p>It is possible to use the replace string method to remove each type of
+punctuation:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;[&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;]&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+<span class="c">#etc...</span>
+</code></pre></div>
+<p>But that’s not very efficient. In keeping with our goal of creating
+short, powerful programs, we’re going to use a mechanism called <em>regular</em>
+<em>expressions</em>. Regular expressions are provided by many programming
+languages in a range of different forms.</p>
+
+<p>Regular expressions allow you to search for well defined patterns and
+can drastically shorten the length of your code. For instance, if you
+wanted to know if a substring matched a letter of the alphabet, rather
+than use an if/else statement to check if it matched the letter “a” then
+“b” then “c”, and so on, you could use a regular expression to see if
+the substring matched a letter between “a” and “z”. Or, you could check
+for the presence of a digit, or a capital letter, or any alphanumeric
+character, or a carriage return, or any combination of the above, and
+more.</p>
+
+<p>In Python, regular expressions are available as a Python module. To
+speed up processing it is not loaded automatically because not all
+programs require it. So, you will have to <code>import</code> the module (called
+<em>re</em>) in the same way that you imported your <em>obo.py</em> module.</p>
+
+<p>Since we’re interested in only alphanumeric characters, we’ll create a
+regular expression that will isolate only these and remove the rest.
+Copy the following function and paste it into the <em>obo.py</em> module at
+the end. You can leave the other functions in the module alone, as we’ll
+continue to use those.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c"># Given a text string, remove all non-alphanumeric</span>
+<span class="c"># characters (using Unicode definition of alphanumeric).</span>
+
+<span class="k">def</span> <span class="nf">stripNonAlphaNum</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">re</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;\W+&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">UNICODE</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+<p>The regular expression in the above code is the material inside the
+string, in other words <code>W+</code>. The <code>W</code> is shorthand for the class of
+<em>non-alphanumeric characters</em>. In a Python regular expression, the plus
+sign (+) matches one or more copies of a given character. The <code>re.UNICODE</code>
+tells the interpreter that we want to include characters from the
+world’s other languages in our definition of “alphanumeric”, as well as
+the A to Z, a to z and 0-9 of English. Regular expressions have to be
+<em>compiled</em> before they can be used, which is what the rest of the
+statement does. Don’t worry about understanding the compilation part
+right now.</p>
+
+<p>When we refine our <em>html-to-list1.py</em> program, it now looks like this:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#html-to-list1.py</span>
+<span class="kn">import</span> <span class="nn">urllib2</span><span class="o">,</span> <span class="nn">obo</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s">&#39;http://www.oldbaileyonline.org/print.jsp?div=t17800628-33&#39;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">obo</span><span class="o">.</span><span class="n">stripTags</span><span class="p">(</span><span class="n">html</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">wordlist</span> <span class="o">=</span> <span class="n">obo</span><span class="o">.</span><span class="n">stripNonAlphaNum</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">wordlist</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">500</span><span class="p">]</span>
+</code></pre></div>
+<p>When you execute the program and look through its output in the “Command
+Output” pane, you’ll see that it has done a pretty good job. This code
+will split hyphenated forms like “coach-wheels” into two words and turn
+the possessive “s” or “o’clock” into separate words by losing the
+apostrophe. But it is a good enough approximation to what we want that
+we should move on to counting frequencies before attempting to make it
+better. (If you work with sources in more than one language, you need to
+learn more about the <a href="http://unicode.org/">Unicode</a> standard and about <a href="http://www.diveintopython.net/xml_processing/unicode.html">Python support</a>
+for it.)</p>
+
+<p>For extra practice with Regular Expressions, you may find Chapter 7 of
+Mark Pilgrim’s “<a href="http://www.diveintopython.net/regular_expressions/index.html">Dive into Python</a>” a useful tutorial.</p>
+
+	        </div>
+
+	        <div class="author-info">
+	   	        <p class="author-name">About the authors</p>
+			    <div class="author-description"><p>
+                
+                   
+                   
+                       William J. Turkel is an Associate Professor of History at the
+University of Western Ontario and director of Digital Infrastructure
+for the Network in Canadian History & Environment (NiCHE).
+&nbsp;
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+		        
+                   
+                   
+                   
+                   
+                       Adam Crymble is a Lecturer of Digital History at the University of 
+Hertfordshire.
+&nbsp;
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+		        </p>
+			    </div>
+	        </div>
+        </article>
+    </div>
+
+    </div> <!-- end below-nav -->
+
+<footer role="contentinfo">
+
+          <div class="additional">
+          <ul id="menu-main-menu" class="additional">
+            <li class="menu-item"><a href="http://programminghistorian.org/about">About</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/lessons">Lessons</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/contribute">Contribute</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/project-team">Project Team</a></li>
+            <li class="menu-item"><a href="http://programminghistorian.org/news.html">News</a></li>
+          </ul>
+        </div>
+
+
+<p><em>The Programming Historian</em> is released under the <a href="http://creativecommons.org/licenses/by/2.0/" rel="license">CC-BY</a> license.</p>
+
+<p class="github">
+        <a href="https://github.com/programminghistorian/jekyll">Hosted on GitHub <img src="http://programminghistorian.org/images/GitHub-Mark-32px.png" title="GitHub logo"></a> 
+		<a href="https://github.com/programminghistorian/jekyll/commits/gh-pages/lessons/normalizing-data.md">Track Changes</a>&nbsp;&#183;&nbsp;
+		<a href="https://github.com/programminghistorian/jekyll/wiki/Reporting-Issues">Report an Issue</a>
+</p>
+
+</footer>
+
+
+    </body>
+</html>
