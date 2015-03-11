@@ -12,6 +12,25 @@ Application Programming Interfaces (APIs)
 
 APIs let you programmatically request specific information from a website. Learn how to use them.
 
+testing html below
+
+<ul class="lesson-image">
+  <li>
+    <a href="../lessons/intro-to-the-zotero-api">
+      <img src="../gallery/intro-to-the-zotero-api.png">
+      <p class="lesson-image-title">Intro to the Zotero API</p>
+      <p class="lesson-image-author">Amanda Morton</p>
+    </a>
+  </li>
+  <li>
+    <a href="../lessons/creating-new-items-in-zotero">
+      <img src="../gallery/creating-new-items-in-zotero.png">
+      <p class="lesson-image-title">Creating New Items in Zotero</p>
+      <p class="lesson-image-author">Amanda Morton</p>
+    </a>
+  </li>
+</ul>
+
 -   [Intro to the Zotero API](../lessons/intro-to-the-zotero-api) <div class="toc-author"> Amanda Morton</div>
 -   [Creating New Items in Zotero](../lessons/creating-new-items-in-zotero) <div class="toc-author">Amanda Morton</div>
 -   [Counting Frequencies from Zotero Items](../lessons/counting-frequencies-from-zotero-items) <div class="toc-author">Spencer Roberts</div>
