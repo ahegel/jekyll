@@ -12,6 +12,8 @@ Application Programming Interfaces (APIs)
 
 APIs let you programmatically request specific information from a website. Learn how to use them.
 
+testing html below
+
 <ul class="lesson-image">
   <li>
     <a href="../lessons/intro-to-the-zotero-api">
