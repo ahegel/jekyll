@@ -576,10 +576,6 @@ table tfoot {
     padding-left: 1.25em;
   }
 
-  /* =============================================================================
-  Testing New Lessons Page
-  ========================================================================== */
-
   ul.lesson-images {
     list-style: none;
     margin: 0;
@@ -594,12 +590,13 @@ table tfoot {
     padding: 0;
   }
 
-  ul.lesson-images li a img {
-    box-shadow: 0 0 5px #c0c0c0;
-  }
-
   ul.lesson-images li a {
     text-decoration: none;
+  }
+
+  ul.lesson-images li a img {
+    box-shadow: 0 0 5px #c0c0c0;
+    width: 200px;
   }
 
   ul.lesson-images h3 {
